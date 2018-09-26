@@ -47,14 +47,6 @@
 
 	<build>
 		<plugins>
-			<!--plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<executable>true</executable>
-				</configuration>
-			</plugin-->
-
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
@@ -70,8 +62,9 @@
 						<Bundle-Activator>
 							by.kolodyuk.osgi.springboot.SpringBootBundleActivator
 						</Bundle-Activator>
+						<Export-Package>by.kolodyuk.osgi.springboot</Export-Package>
 						<Private-Package>
-							by.kolodyuk.osgi.springboot
+							by.kolodyuk.osgi.springboot.*
 						</Private-Package>
 						<Import-Package>
 							!org.springframework.*,
