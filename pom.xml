@@ -18,9 +18,11 @@
 	</parent>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+        <osgi.version>5.0.0</osgi.version>
+
+        <bundle.plugin.version>3.3.0</bundle.plugin.version>
+        <docker.plugin.version>0.27.2</docker.plugin.version>
 	</properties>
 
 	<dependencies>
@@ -40,7 +42,7 @@
 		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.core</artifactId>
-			<version>5.0.0</version>
+			<version>${osgi.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -50,7 +52,7 @@
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>3.3.0</version>
+				<version>${bundle.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
@@ -82,5 +84,46 @@
 			</plugin>
 		</plugins>
 	</build>
+
+    <profiles>
+        <profile>
+            <id>docker</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <version>${docker.plugin.version}</version>
+                        <configuration>
+                            <images>
+                                <image>
+                                    <name>${project.groupId}/${project.artifactId}:${project.version}</name>
+                                    <run>
+                                        <ports>
+                                            <port>9015:9015</port>
+                                        </ports>
+                                        <wait>
+                                            <!-- Start container for 5 mins -->
+                                            <time>300000</time>
+                                        </wait>
+                                    </run>
+                                </image>
+                            </images>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                    <goal>start</goal>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
